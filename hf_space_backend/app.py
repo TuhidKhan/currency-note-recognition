@@ -74,7 +74,10 @@ def extract_banknote_crop(img_pil):
 
 
 def _eval_tensor(pil_img):
-    t = transform(pil_img).unsqueeze(0).to(device)
+    target_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if next(model.parameters()).device != target_device:
+        model.to(target_device)
+    t = transform(pil_img).unsqueeze(0).to(target_device)
     with torch.no_grad():
         out = model(t)
         probs = torch.softmax(out, dim=1)[0]
@@ -82,7 +85,6 @@ def _eval_tensor(pil_img):
     return best_p.item(), probs
 
 
-@spaces.GPU
 def predict_core(image: Image.Image):
     image = image.convert("RGB")
 
