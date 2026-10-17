@@ -1,0 +1,10 @@
+torch
+torchvision
+pillow
+fastapi
+python-multipart
+uvicorn
+gradio
+spaces
+opencv-python-headless
+numpy

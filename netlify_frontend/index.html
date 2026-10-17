@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Recognition System</title>
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Clean Professional Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ============================================================
+       1. TOP NAVIGATION BAR (Clean & Corporate)
+       ============================================================ -->
+  <header class="navbar">
+    <div class="nav-wrapper">
+      <div class="brand-group">
+        <span class="brand-logo-mark"></span>
+        <span class="brand-text">Banknote Recognition System</span>
+      </div>
+      <div class="nav-tag">Transfer Learning &bull; ResNet-50</div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       2. MAIN APPLICATION CONTENT
+       ============================================================ -->
+  <main class="page-container">
+    
+    <!-- Page Header Section -->
+    <section class="page-header">
+      <h1>Automated Currency Classification</h1>
+      <p>Deep learning computer vision system for Afghan Afghani (AFN) and Pakistani Rupee (PKR) banknotes.</p>
+    </section>
+
+    <!-- Two-Column Working Grid -->
+    <div class="app-grid">
+
+      <!-- ======================================================
+           LEFT PANEL: IMAGE INPUT & SPECIFICATIONS
+           ====================================================== -->
+      <section class="panel input-panel">
+        <div class="panel-header">
+          <h2>Banknote Image Input</h2>
+          <span class="panel-status">Ready</span>
+        </div>
+
+        <!-- Hidden input for file selection -->
+        <input type="file" id="fileInput" accept="image/jpeg, image/png, image/jpg" style="display: none;">
+
+        <!-- Dropzone Area -->
+        <div class="upload-dropzone" id="dropzone">
+          
+          <!-- Default State: Upload Prompt -->
+          <div id="dropzonePrompt" class="prompt-box">
+            <!-- Minimal Vector Upload Icon -->
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="prompt-primary">Upload or drag banknote image</p>
+            <p class="prompt-secondary">Supported formats: JPG, JPEG, PNG (Max 10MB)</p>
+          </div>
+
+          <!-- Active State: Image Preview -->
+          <div id="previewContainer" class="preview-box" style="display: none;">
+            <img id="imagePreview" alt="Banknote preview" class="preview-image">
+            <button type="button" id="removeBtn" class="btn-clear" title="Remove selected image">Remove Image</button>
+          </div>
+
+        </div>
+
+        <!-- Action Button -->
+        <button type="button" id="analyzeBtn" class="btn-primary" disabled>
+          <span id="btnLabel">Run Classification</span>
+          <span id="btnLoader" class="loader-spinner" style="display: none;"></span>
+        </button>
+
+        <!-- Dynamic Connection / Status Message -->
+        <div id="systemAlert" class="system-alert" style="display: none;"></div>
+
+        <!-- System Specifications Box -->
+        <div class="specs-card">
+          <div class="specs-title">Supported Currencies & Denominations</div>
+          <div class="specs-row">
+            <span class="specs-badge">AFN</span>
+            <span class="specs-desc">Afghan Afghani: 10, 20, 50, 100, 500, 1000</span>
+          </div>
+          <div class="specs-row">
+            <span class="specs-badge">PKR</span>
+            <span class="specs-desc">Pakistani Rupee: 10, 20, 50, 100, 500, 1000, 5000</span>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================
+           RIGHT PANEL: CLASSIFICATION ANALYSIS & OUTPUT
+           ====================================================== -->
+      <section class="panel output-panel">
+        <div class="panel-header">
+          <h2>Analysis Results</h2>
+          <span id="resultStateBadge" class="panel-status-idle">Awaiting Input</span>
+        </div>
+
+        <!-- Empty Placeholder State -->
+        <div id="idleState" class="idle-state">
+          <svg class="svg-icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <p class="idle-title">No image selected</p>
+          <p class="idle-text">Select a banknote image and execute classification to view model output.</p>
+        </div>
+
+        <!-- Populated Results Section (Visible after API response) -->
+        <div id="resultDetails" class="result-details" style="display: none;">
+          
+          <!-- Primary Identification Banner -->
+          <div class="summary-card">
+            <div class="summary-top">
+              <span class="metric-caption">IDENTIFIED CURRENCY</span>
+              <span id="countryCodeBadge" class="country-badge">PKR</span>
+            </div>
+            
+            <div id="currencyTitle" class="currency-title">Pakistani Rupee</div>
+            
+            <div class="denom-wrap">
+              <span class="metric-caption">DENOMINATION</span>
+              <div id="denominationText" class="denomination-text">1,000 PKR</div>
+            </div>
+          </div>
+
+          <!-- Confidence Metric & Progress Indicator -->
+          <div class="metric-group">
+            <div class="metric-header">
+              <span class="metric-label">Model Confidence</span>
+              <span id="confidenceValue" class="metric-score">0%</span>
+            </div>
+            <div class="progress-track">
+              <div id="progressIndicator" class="progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Top Probability Matches -->
+          <div class="matches-group">
+            <h3 class="matches-title">Top Classification Probabilities</h3>
+            <div id="matchesList" class="matches-list">
+              <!-- Dynamically populated via script.js -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================================
+       3. SYSTEM FOOTER (Developer Credit & Social Links)
+       ============================================================ -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p class="footer-credit">Developed by <strong>Tuhid Khan</strong></p>
+      <div class="footer-links">
+        <a href="https://github.com/TuhidKhan" target="_blank" rel="noopener noreferrer" class="social-link">
+          <!-- Minimal GitHub SVG Vector -->
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/tuhid-khan/" target="_blank" rel="noopener noreferrer" class="social-link">
+          <!-- Minimal LinkedIn SVG Vector -->
+          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+          LinkedIn
+        </a>
+      </div>
+      <p class="footer-subtext">ResNet-50 Convolutional Neural Network &bull; Banknote Classification Assistant</p>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript Module -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+/* ============================================================
+   1. GLOBAL SYSTEM VARIABLES & COLOR SYSTEM
+   ============================================================ */
+:root {
+  /* Surface & Background Colors */
+  --bg-canvas: #F8FAFC;        /* Subtle cool off-white canvas */
+  --surface-panel: #FFFFFF;    /* Pure white panel card background */
+  --surface-subtle: #F1F5F9;   /* Soft slate for info areas */
+  
+  /* Typography Colors */
+  --text-heading: #0F172A;     /* Deep slate for titles and headers */
+  --text-body: #334155;        /* Standard high-contrast reading text */
+  --text-muted: #64748B;       /* Muted gray for captions and hints */
+  
+  /* Accent & Interactive Colors */
+  --color-primary: #1D4ED8;    /* Corporate royal blue */
+  --color-primary-hover: #1E40AF;
+  --color-success: #059669;    /* Clean emerald for verified currency */
+  --color-danger: #DC2626;     /* Subtle red for remove actions */
+  
+  /* Borders & Shadows */
+  --border-light: #E2E8F0;     /* Clean hairline border */
+  --border-focus: #93C5FD;
+  --shadow-panel: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --radius-panel: 8px;         /* Standard subtle corner radius */
+}
+
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   2. TOP NAVIGATION BAR
+   ============================================================ */
+.navbar {
+  background-color: var(--surface-panel);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0.85rem 1.5rem;
+}
+
+.nav-wrapper {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-logo-mark {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
+}
+
+.brand-text {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: -0.2px;
+}
+
+.nav-tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: var(--surface-subtle);
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+/* ============================================================
+   3. PAGE CONTAINER & HEADER
+   ============================================================ */
+.page-container {
+  max-width: 1140px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  flex: 1;
+  width: 100%;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 1.2rem;
+}
+
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: -0.4px;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.35rem;
+}
+
+/* 2-Column Responsive Layout */
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+}
+
+@media (max-width: 820px) {
+  .app-grid {
+    grid-template-columns: 1fr; /* Switch to single column on mobile */
+  }
+}
+
+/* ============================================================
+   4. PANEL CONTAINERS (CARDS)
+   ============================================================ */
+.panel {
+  background-color: var(--surface-panel);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-panel);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.75rem;
+}
+
+.panel-header h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.panel-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.panel-status-idle {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   5. UPLOAD DROPZONE & PREVIEW (LEFT PANEL)
+   ============================================================ */
+.upload-dropzone {
+  border: 1.5px dashed #CBD5E1;
+  border-radius: 6px;
+  background-color: #FAFAFA;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-dropzone:hover, .upload-dropzone.dragover {
+  border-color: var(--color-primary);
+  background-color: #F8FAFC;
+}
+
+/* Vector Upload Icon */
+.svg-icon {
+  width: 32px;
+  height: 32px;
+  stroke: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.prompt-primary {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.prompt-secondary {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Preview Image Area */
+.preview-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+}
+
+.btn-clear {
+  background: none;
+  border: 1px solid var(--border-light);
+  color: var(--color-danger);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-clear:hover {
+  background-color: #FEF2F2;
+  border-color: #FCA5A5;
+}
+
+/* Primary Execution Button */
+.btn-primary {
+  width: 100%;
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.15s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-primary:disabled {
+  background-color: #E2E8F0;
+  color: #94A3B8;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.loader-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: rotateSpinner 0.75s linear infinite;
+}
+
+@keyframes rotateSpinner {
+  to { transform: rotate(360deg); }
+}
+
+.system-alert {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+/* Specifications Card */
+.specs-card {
+  margin-top: 1.5rem;
+  background-color: var(--surface-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 1rem;
+  font-size: 0.82rem;
+}
+
+.specs-title {
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 0.74rem;
+}
+
+.specs-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.45rem;
+}
+
+.specs-badge {
+  background-color: #E2E8F0;
+  color: var(--text-heading);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+}
+
+.specs-desc {
+  color: var(--text-body);
+}
+
+/* ============================================================
+   6. OUTPUT & CLASSIFICATION (RIGHT PANEL)
+   ============================================================ */
+.idle-state {
+  text-align: center;
+  padding: 3.5rem 1rem;
+  color: var(--text-muted);
+}
+
+.svg-icon-large {
+  width: 44px;
+  height: 44px;
+  stroke: #CBD5E1;
+  margin-bottom: 0.75rem;
+}
+
+.idle-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.idle-text {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Identification Summary Box */
+.summary-card {
+  background-color: #F8FAFC;
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--color-success);
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-caption {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.country-badge {
+  background-color: #DCFCE7;
+  color: var(--color-success);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid #BBF7D0;
+}
+
+.currency-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0.35rem 0 1rem 0;
+}
+
+.denom-wrap {
+  border-top: 1px solid var(--border-light);
+  padding-top: 0.75rem;
+}
+
+.denomination-text {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-success);
+  letter-spacing: -0.5px;
+  margin-top: 0.2rem;
+}
+
+/* Confidence Metric Bar */
+.metric-group {
+  margin-bottom: 1.5rem;
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  margin-bottom: 0.4rem;
+}
+
+.metric-label {
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+.metric-score {
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.progress-track {
+  height: 6px;
+  background-color: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--color-success);
+  transition: width 0.4s ease;
+}
+
+/* Matches Breakdown */
+.matches-group {
+  border-top: 1px solid var(--border-light);
+  padding-top: 1.2rem;
+}
+
+.matches-title {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #F8FAFC;
+  color: var(--text-body);
+}
+
+.match-score {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+/* ============================================================
+   7. APPLICATION FOOTER & DEVELOPER PROFILE
+   ============================================================ */
+.app-footer {
+  background-color: var(--surface-panel);
+  border-top: 1px solid var(--border-light);
+  padding: 1.8rem 1.5rem;
+  margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.footer-credit {
+  font-size: 0.95rem;
+  color: var(--text-heading);
+}
+
+.footer-credit strong {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-body);
+  text-decoration: none;
+  font-size: 0.84rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+  background-color: var(--surface-subtle);
+  transition: all 0.15s ease;
+}
+
+.social-link:hover {
+  color: var(--color-primary);
+  border-color: var(--border-focus);
+  background-color: #EFF6FF;
+}
+
+.social-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.footer-subtext {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
